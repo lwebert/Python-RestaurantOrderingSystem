@@ -18,6 +18,9 @@ def place_order(menu):
                   and quantity ordered.
     order_total (float): The total price of the order.
     """
+    if not menu:
+        return
+
     # Set up order list. Order list will store a list of dictionaries for
     # menu item name, item price, and quantity ordered
     order = []
@@ -27,6 +30,7 @@ def place_order(menu):
 
     # Launch the store and present a greeting to the customer
     print("Welcome to the Generic Take Out Restaurant.")
+    print("What would you like to order? ")
 
     place_order = True
     # TODO: Create a continuous while loop so customers can order multiple items
@@ -49,7 +53,7 @@ def place_order(menu):
                 i += 1
 
         # Ask customer to input menu item number
-        menu_selection = input("Type menu item number: ")
+        menu_selection = input("Type menu number: ")
 
         # Update the order list using the update_order function
         # Send the order list, menu selection, and menu items as arguments
@@ -57,8 +61,9 @@ def place_order(menu):
 
         # Ask the customer if they would like to order anything else
         # Let the customer know if they should type 'n' or 'N' to quit
-        print("Would you like to keep ordering?")
-        keep_ordering = input("Press 'N' to quit, Press any other button to continue: ")
+        keep_ordering = input("Would you like to keep ordering? (N) to quit: ")
+        # print("Would you like to keep ordering?")
+        # keep_ordering = input("Press 'N' to quit, Press any other button to continue: ")
 
         # TODO: Write a conditional statement that checks if the customer types
         # 'n' or 'N'
@@ -66,6 +71,9 @@ def place_order(menu):
             # Since the customer decided to stop ordering, thank them for
             # their order
             print("Thank you for your order.")
+
+            if order is None:
+                order = []
 
             # TODO: Use a list comprehension to create a list called prices_list,
             # which contains the total prices for each item in the order list:
@@ -109,42 +117,52 @@ def update_order(order, menu_selection, menu_items):
 
     # TODO: Check if the customer's input string can be converted
     # to an integer and prints an error message if it does not
+    # assert menu_selection.isdigit(), "was not a menu option."
     if not menu_selection.isdigit():
-        print("Error. Input a number corresponding to a menu item.")
+        # raise AssertionError("was not a menu option.")
+        # print("Error. Input a number corresponding to a menu item.")
+        # return
+        print(f"{menu_selection} was not a menu option.")
+        return
+    # TODO: Convert the menu selection to an integer
+    menu_selection = int(menu_selection)
+
+    # TODO: Write a conditional statement that checks if the customer's input is
+    # an item on the menu and prints an error message if it is not
+    if menu_selection not in menu_items.keys():
+        print("was not a menu option.")
         return
     else:
-        # TODO: Convert the menu selection to an integer
-        menu_selection = int(menu_selection)
+        # Store the item name as a variable
+        item_name = menu_items[menu_selection]["Item name"]
 
-        # TODO: Write a conditional statement that checks if the customer's input is
-        # an item on the menu and prints an error message if it is not
-        if not menu_selection in menu_items.keys():
-            print("Error. Input not an option on the menu.")
-            return
-        else:
-            # Store the item name as a variable
-            item_name = menu_items[menu_selection]["Item name"]
+        # TODO: A prompt (input) to the customer that prints the name of the
+        # menu item to the user and asks the quantity they would like to order.
+        # Store the return in a quantity variable
 
-            # TODO: A prompt (input) to the customer that prints the name of the
-            # menu item to the user and asks the quantity they would like to order.
-            # Store the return in a quantity variable
-            print(f"How many {item_name}(s) would you like to order?")
-            quantity = input("Type the order quantity here: ")
+        # print(f"How many {item_name}(s) would you like to order?")
+        # quantity = input("Type the order quantity here: ")
+        quantity = input(
+            f"What quantity of {item_name} would you like? \n"
+            f"(This will default to 1 if number is not entered)\n"
+        )
 
-            # TODO: Write a conditional statement that checks if the input quantity
-            # can be converted to an integer, then converts it to an integer.
-            # Have it default to 1 if it does not.
-            if not quantity.isdigit():
-                quantity = '1'
+        # TODO: Write a conditional statement that checks if the input quantity
+        # can be converted to an integer, then converts it to an integer.
+        # Have it default to 1 if it does not.
+        if not quantity.isdigit():
+            quantity = "1"
 
-            quantity = int(quantity)
+        quantity = int(quantity)
 
-            # TODO: Add a dictionary with the item name, price, and quantity to the
-            # order list. Use the following names for the dictionary keys:
-            # "Item name", "Price", "Quantity"
-            item_price = menu_items[menu_selection]["Price"]
+        # TODO: Add a dictionary with the item name, price, and quantity to the
+        # order list. Use the following names for the dictionary keys:
+        # "Item name", "Price", "Quantity"
+        item_price = menu_items[menu_selection]["Price"]
 
-            order.append({"Item name": item_name, "Price": item_price, "Quantity": quantity})
+        order.append(
+            {"Item name": item_name, "Price": item_price, "Quantity": quantity}
+        )
 
     # TODO: Return the updated order
     return order
